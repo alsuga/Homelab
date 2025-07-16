@@ -13,7 +13,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    token = config.age.secrets.k3s-token.path;
+    tokenFile = config.age.secrets.k3s-token.path;
     extraFlags = toString ([
       "--write-kubeconfig-mode=0644"
       "--cluster-init"
@@ -31,4 +31,3 @@
     name = "iqn.2016-04.com.open-iscsi:${meta.hostname}";
   };
 }
-

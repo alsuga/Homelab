@@ -56,7 +56,7 @@
   ];
 
   age.identityPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
+    "~/.ssh/id_ed25519"
     # Añade otras claves si es necesario, como ssh_host_rsa_key
   ];
 

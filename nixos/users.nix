@@ -12,7 +12,7 @@
     # Use agenix for password management
     hashedPasswordFile = config.age.secrets.user-password.path;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGRP3/lfyykoZQnJ7hDmrc7OpqYpblzeg1oF7slOMKLk"
+      ""
     ];
   };
 }
