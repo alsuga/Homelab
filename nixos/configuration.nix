@@ -5,9 +5,13 @@
 { config, lib, pkgs, meta, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-    ];
+  imports = [
+  # Include the results of the hardware scan.
+  ./hardware-configuration.nix
+  ./k3s.nix
+  ./users.nix
+  ./networking.nix
+];
 
   nix = {
     extraOptions = ''
@@ -19,91 +23,36 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = meta.hostname; # Define your hostname.
-# Pick only one of the below networking options.
-# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
 # Set your time zone.
   time.timeZone = "America/Bogota";
-
-# Configure network proxy if necessary
-# networking.proxy.default = "http://user:password@proxy:port/";
-# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
 # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
-#useXkbConfig = true; # use xkb.options in tty.
+    useXkbConfig = true; # use xkb.options in tty.
   };
 
 # Fixes for longhorn
   systemd.tmpfiles.rules = [
     "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
   ];
-  virtualisation.docker.logDriver = "json-file";
-
-# Enable the X11 windowing system.
-# services.xserver.enable = true;
-
-# Configure keymap in X11
-# services.xserver.xkb.layout = "us";
-# services.xserver.xkb.options = "eurosign:e,caps:escape";
-  services.k3s = {
+  virtualisation.docker = {
     enable = true;
-    role = "server";
-    token = "$token_here";
-    extraFlags = toString ([
-        "--write-kubeconfig-mode \"0644\""
-        "--cluster-init"
-        "--disable servicelb"
-        "--disable traefik"
-        "--disable local-storage"
-    ] ++ (if meta.hostname == "homelab-0" then [] else [
-      "--server https://homelab-0:6443"
-    ]));
-    clusterInit = (meta.hostname == "homelab-0");
-  };
-
-  services.openiscsi = {
-    enable = true;
-    name = "iqn.2016-04.com.open-iscsi:${meta.hostname}";
-  };
-
-# Enable CUPS to print documents.
-# services.printing.enable = true;
-
-# Enable sound.
-# sound.enable = true;
-# hardware.pulseaudio.enable = true;
-
-# Enable touchpad support (enabled default in most desktopManager).
-# services.xserver.libinput.enable = true;
-
-# Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.alsuga = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-      packages = with pkgs; [
-      tree
-      ];
-# Created using mkpasswd
-    hashedPassword = "$hashed_password_here";
-    openssh.authorizedKeys.keys = [
-      "$openssh_key_here"
-    ];
+    logDriver = "json-file";
   };
 
 # List packages installed in system profile. To search, run:
 # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim
-    k3s
-    cifs-utils
-    nfs-utils
-    git
+      k3s
+      cifs-utils
+      nfs-utils
+      git
+      agenix
   ];
 
 # Some programs need SUID wrappers, can be configured further or are
@@ -116,14 +65,21 @@
 
 # List services that you want to enable:
 
-# Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+# Automatic updates for security
+system.autoUpgrade = {
+  enable = true;
+  allowReboot = false;  # Set to true if you want automatic reboots
+};
 
-# Open ports in the firewall.
-# networking.firewall.allowedTCPPorts = [ 80 ];
-# networking.firewall.allowedUDPPorts = [ ... ];
-# Or disable the firewall altogether.
-  networking.firewall.enable = false;
+# Better logging
+services.journald.extraConfig = ''
+  SystemMaxUse=100M;
+  MaxRetentionSec=7day;
+'';
+
+# NTP for time synchronization
+services.timesyncd.enable = true;
+
 
 # Copy the NixOS configuration file and link it from the resulting system
 # (/run/current-system/configuration.nix). This is useful in case you

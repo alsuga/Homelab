@@ -1,0 +1,16 @@
+# Private keys - NEVER commit these
+*.key
+*_key
+id_*
+!*.pub
+keys.txt
+
+# Decrypted secrets
+secrets/*.txt
+secrets/*.json
+secrets/*.env
+
+# But allow .age files (encrypted) and .pub files (public keys)
+!secrets/*.age
+!*.pub
+

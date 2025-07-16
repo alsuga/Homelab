@@ -6,28 +6,28 @@
     # Disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, ... }@inputs: let
-    nodes = [
-      "homelab-0"
-    ];
-  in {
-    nixosConfigurations = builtins.listToAttrs (map (name: {
-      name = name;
-      value = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          meta = { hostname = name; };
-        };
+  outputs = { self, nixpkgs, disko, agenix, ... }: {
+    nixosConfigurations = {
+      homelab-0 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = {
+          meta = {
+            hostname = "homelab-0";
+          };
+        };
         modules = [
-          #Modules
           disko.nixosModules.disko
-          ./hardware-configuration.nix
+          agenix.nixosModules.default
           ./disko-config.nix
           ./configuration.nix
         ];
       };
-    }) nodes);
-  };
+      
+      # Add more nodes as needed
+  }
 }

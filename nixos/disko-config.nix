@@ -2,8 +2,7 @@
   disko.devices = {
     disk = {
       os_nvme_disk = {
-        device = "/dev/nvme0n1";
-
+        device = "/dev/disk/by-id/nvme-TEAM_TM8FP6512G_TPBF2303170040302557";
         type = "disk";
         content = {
           type = "gpt";
@@ -16,6 +15,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = ["fmask=0077" "dmask=0077"];
               };
             };
             root = {
@@ -27,15 +27,18 @@
                 subvolumes = {
                   "/@rootfs" = {
                     mountpoint = "/";
+                    mountOptions = ["compress=zstd" "noatime"];
                   };
                   "/@home" = {
                     mountpoint = "/home";
-                    mountOptions = [ "compress=zstd" ];
+                    mountOptions = ["compress=zstd"];
                   };
-                  "/@home/alsuga" = { };
                   "/@nix" = {
                     mountpoint = "/nix";
-                    mountOptions = [ "compress=zstd" "noatime"];
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                  "/@snapshots" = {
+                    mountpoint = "/snapshots";
                   };
                 };
               };
@@ -44,20 +47,36 @@
         };
       };
 
-      sata_media_disk = {
-        device = "/dev/sda";
-
+      media_disk = {
+        device = "/dev/disk/by-id/ata-ST8000DM004-2U9188_ZR1690E5";
         type = "disk";
         content = {
           type = "gpt";
           partitions = {
-            data_storage = {
+            media_storage = {
               name = "MEDIA_STORAGE";
               size = "100%";
               content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/srv/media";
+                type = "btrfs";
+                extraArgs = ["-f"];
+                mountpoint = "/srv/storage";
+                mountOptions = [
+                  "compress=zstd:1"
+                  "space_cache=v2"
+                  "relatime"
+                  "user_xattr"
+                  "acl"
+                ];
+                subvolumes = {
+                  "/@k3s-volumes" = {
+                    mountpoint = "/srv/storage/volumes";
+                    mountOptions = ["compress=zstd:1" "noatime"];
+                  };
+                  "/@backups" = {
+                    mountpoint = "/srv/media/backups";
+                    mountOptions = ["compress=zstd:3"];
+                  };
+                };
               };
             };
           };
