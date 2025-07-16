@@ -5,27 +5,15 @@
     isNormalUser = true;
     extraGroups = [ 
       "wheel"      # Enable 'sudo' for the user
-      "docker"     # Allow docker access
-      "networkmanager"  # Allow network configuration
     ];
     packages = with pkgs; [
       tree
-      tmux
-      htop
     ];
     # Use agenix for password management
     hashedPasswordFile = config.age.secrets.user-password.path;
     openssh.authorizedKeys.keys = [
-      # Move your SSH key here or use agenix
-      config.age.secrets.ssh-key.path
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGRP3/lfyykoZQnJ7hDmrc7OpqYpblzeg1oF7slOMKLk"
     ];
-
-    age.secrets.alejandro-password = {
-      file = ./secrets/alejandro-password.age;
-      owner = "alejandro";
-      group = "users";
-      mode = "0400";
-    };
   };
 }
 

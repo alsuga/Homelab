@@ -8,9 +8,10 @@
   imports = [
   # Include the results of the hardware scan.
   ./hardware-configuration.nix
-  ./k3s.nix
+  ./secrets.nix
   ./users.nix
   ./networking.nix
+  ./k3s.nix
 ];
 
   nix = {
@@ -32,7 +33,6 @@
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
-    useXkbConfig = true; # use xkb.options in tty.
   };
 
 # Fixes for longhorn
@@ -48,43 +48,34 @@
 # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim
-      k3s
-      cifs-utils
-      nfs-utils
-      git
-      agenix
+    k3s
+    cifs-utils
+    nfs-utils
+    git
+    age
   ];
 
-# Some programs need SUID wrappers, can be configured further or are
-# started in user sessions.
-# programs.mtr.enable = true;
-# programs.gnupg.agent = {
-#   enable = true;
-#   enableSSHSupport = true;
-# };
+  age.identityPaths = [
+    "/etc/ssh/ssh_host_ed25519_key"
+    # Añade otras claves si es necesario, como ssh_host_rsa_key
+  ];
 
 # List services that you want to enable:
 
 # Automatic updates for security
-system.autoUpgrade = {
-  enable = true;
-  allowReboot = false;  # Set to true if you want automatic reboots
-};
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = false;  # Set to true if you want automatic reboots
+  };
 
 # Better logging
-services.journald.extraConfig = ''
-  SystemMaxUse=100M;
-  MaxRetentionSec=7day;
-'';
+  services.journald.extraConfig = ''
+    SystemMaxUse=100M;
+    MaxRetentionSec=7day;
+  '';
 
 # NTP for time synchronization
-services.timesyncd.enable = true;
-
-
-# Copy the NixOS configuration file and link it from the resulting system
-# (/run/current-system/configuration.nix). This is useful in case you
-# accidentally delete configuration.nix.
-# system.copySystemConfiguration = true;
+  services.timesyncd.enable = true;
 
 # This option defines the first version of NixOS you have installed on this particular machine,
 # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

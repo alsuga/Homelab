@@ -29,5 +29,6 @@
       };
       
       # Add more nodes as needed
-  }
+    };
+  };
 }
