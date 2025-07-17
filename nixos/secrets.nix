@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ ... }:
 
 {
   age.secrets.user-password = {
@@ -6,7 +6,8 @@
     owner = "alsuga";
     publicKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtOvtzUhnmekCdm+VaF6lGbxiIHZ4qmcecvqnOzVcew ing.alsuga@gmail.com"
-      (lib.findSingle (key: key.type == "ed25519") config.services.openssh.hostKeys).pubKey
+      # Temporary until I figure out how to import this
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLYKcnob711EjEzLViY5IwkRzSzVqc7AptL+gx3buCp root@nixos"
     ];
   };
 
@@ -15,7 +16,7 @@
     owner = "root";
     publicKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtOvtzUhnmekCdm+VaF6lGbxiIHZ4qmcecvqnOzVcew ing.alsuga@gmail.com"
-      (lib.findSingle (key: key.type == "ed25519") config.services.openssh.hostKeys).pubKey
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLYKcnob711EjEzLViY5IwkRzSzVqc7AptL+gx3buCp root@nixos"
     ];
   };
 }
