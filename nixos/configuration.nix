@@ -44,6 +44,10 @@
     logDriver = "json-file";
   };
 
+  age.identityPaths = [
+    "/etc/ssh/ssh_host_ed25519_key"
+  ];
+
 # List packages installed in system profile. To search, run:
 # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -52,10 +56,6 @@
     cifs-utils
     nfs-utils
     git
-  ];
-
-  age.identityPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
   ];
 
 # List services that you want to enable:

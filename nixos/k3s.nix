@@ -1,10 +1,11 @@
 { config, lib, pkgs, meta, ... }:
 
 {
+# Fixes for longhorn
   systemd.tmpfiles.rules = [
     "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
   ];
-  
+
   virtualisation.docker = {
     enable = true;
     logDriver = "json-file";
