@@ -9,6 +9,7 @@
   # Include the results of the hardware scan.
   ./hardware-configuration.nix
   ./secrets.nix
+  ./age-secrets.nix
   ./users.nix
   ./networking.nix
   ./k3s.nix
