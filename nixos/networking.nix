@@ -9,7 +9,7 @@
 # Or disable the firewall altogether.
 networking.firewall = {
   enable = true;
-  allowedTCPPorts = [ 2222 6443 10250 2379 2380 ];  # SSH, K3s API, kubelet, etcd
+  allowedTCPPorts = [ 22 6443 10250 2379 2380 ];  # SSH, K3s API, kubelet, etcd
   allowedUDPPorts = [ 8472 ];  # flannel VXLAN
   trustedInterfaces = [ "flannel.1" "cni0" ];
 };
@@ -17,7 +17,7 @@ networking.firewall = {
 # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    ports = [ 2222 ];
+    ports = [ 22 ];
     settings = {
       PasswordAuthentication = false;  # Only allow key-based auth
       PermitRootLogin = "no";         # Disable root login
@@ -33,7 +33,7 @@ networking.firewall = {
     jails = {
       ssh.settings = {
         enabled = true;
-        port = "2222";  # Match your SSH port
+        port = "22";  # Match your SSH port
         maxretry = 3;
         bantime = "1h";
       };

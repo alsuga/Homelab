@@ -52,12 +52,10 @@
     cifs-utils
     nfs-utils
     git
-    age
   ];
 
   age.identityPaths = [
-    "/home/alsuga/.ssh/id_ed25519"
-    # Añade otras claves si es necesario, como ssh_host_rsa_key
+    "/etc/ssh/ssh_host_ed25519_key"
   ];
 
 # List services that you want to enable:
