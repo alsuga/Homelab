@@ -23,7 +23,6 @@
               content = {
                 type = "btrfs";
                 extraArgs = ["-f"];
-                mountpoint = "/mnt/btrfs-root";
                 subvolumes = {
                   "/@rootfs" = {
                     mountpoint = "/";
@@ -59,13 +58,10 @@
               content = {
                 type = "btrfs";
                 extraArgs = ["-f"];
-                mountpoint = "/srv/storage";
                 mountOptions = [
                   "compress=zstd:1"
                   "space_cache=v2"
                   "relatime"
-                  "user_xattr"
-                  "acl"
                 ];
                 subvolumes = {
                   "/@k3s-volumes" = {
@@ -73,7 +69,7 @@
                     mountOptions = ["compress=zstd:1" "noatime"];
                   };
                   "/@backups" = {
-                    mountpoint = "/srv/media/backups";
+                    mountpoint = "/srv/storage/backups";
                     mountOptions = ["compress=zstd:3"];
                   };
                 };
