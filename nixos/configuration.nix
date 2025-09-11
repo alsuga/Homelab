@@ -8,8 +8,6 @@
   imports = [
   # Include the results of the hardware scan.
   ./hardware-configuration.nix
-  ./secrets.nix
-  ./age-secrets.nix
   ./users.nix
   ./networking.nix
   ./k3s.nix
@@ -45,10 +43,6 @@
     logDriver = "json-file";
   };
 
-  age.identityPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
-  ];
-
 # List packages installed in system profile. To search, run:
 # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -57,6 +51,11 @@
     cifs-utils
     nfs-utils
     git
+    curl
+    wget
+    htop
+    iotop
+    tree
   ];
 
 # List services that you want to enable:
@@ -75,6 +74,24 @@
 
 # NTP for time synchronization
   services.timesyncd.enable = true;
+  
+  sops.defaultSopsFile = ./secrets/keys.yaml;
+  sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+  sops.age.keyFile = "/var/lib/sops-nix/key.txt";
+  sops.age.generateKey = true;
+
+  sops.secrets.user_password = {
+    path = "/run/secrets/user_password";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+  sops.secrets.k3s_token = {
+    path = "/run/secrets/k3s_token";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
 
 # This option defines the first version of NixOS you have installed on this particular machine,
 # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

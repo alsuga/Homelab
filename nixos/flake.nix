@@ -3,15 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     # Disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, agenix, ... }: {
+  outputs = { self, nixpkgs, disko, sops-nix, ... }: {
     nixosConfigurations = {
       homelab-0 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -22,7 +21,7 @@
         };
         modules = [
           disko.nixosModules.disko
-          agenix.nixosModules.default
+          sops-nix.nixosModules.sops
           ./disko-config.nix
           ./configuration.nix
         ];

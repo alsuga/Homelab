@@ -9,9 +9,9 @@
 # Or disable the firewall altogether.
 networking.firewall = {
   enable = true;
-  allowedTCPPorts = [ 22 6443 10250 2379 2380 ];  # SSH, K3s API, kubelet, etcd
+  allowedTCPPorts = [ 22 6443 10250 2379 2380 9500 ];  # SSH, K3s API, kubelet, etcd
   allowedUDPPorts = [ 8472 ];  # flannel VXLAN
-  trustedInterfaces = [ "flannel.1" "cni0" ];
+  trustedInterfaces = [ "flannel.1" "cni0" "lo"];
 };
 
 # Enable the OpenSSH daemon.

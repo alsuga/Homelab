@@ -1,0 +1,11 @@
+keys:
+  - &homelab age1ljau8045s9secyw0rjn8vzdn4yk563rn2nu66ckv048lq9693gfs8f2yva
+  - &portatil age1ufycsgyz3qjxwkvfn4kk38wwdle5uwn7sj36qdw5ek8xlp55nd8qhc3j9v
+  - &desktop age172lfc9904q9c8nftvttz23e9pazqmskagcujzgy3qcct86w5wgts8sm7kq
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *homelab
+      - *portatil
+      - *desktop
