@@ -1,0 +1,42 @@
+image:
+  tag: v0.9.3
+
+immich:
+  metrics:
+    enabled: true
+  persistence:
+    library:
+      existingClaim: immich-library-pvc
+  configuration:
+    trash:
+      enabled: false
+      days: 30
+
+env:
+  DB_HOSTNAME: "immich-postgres-rw.immich.svc.cluster.local"
+envFrom:
+  - secretRef:
+      name: immich-postgres-user
+
+postgresql:
+  enabled: false
+
+redis:
+  enabled: true
+  persistence:
+    enabled: true
+    storageClassName: "longhorn"
+    size: 10Gi
+
+server:
+  enabled: true
+  ingress:
+    main:
+      enabled: true
+      className: "nginx-internal"
+      hosts:
+        - host: immich.homelab
+          paths:
+            - path: /
+              pathType: Prefix
+

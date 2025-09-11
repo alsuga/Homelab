@@ -1,8 +1,10 @@
 ---
-DNS1: 192.168.0.1
+DNS1: 192.168.1.1
+DNS2: 1.1.1.1
 persistentVolumeClaim:
   enabled: true
 ingress:
+  ingressClassName: nginx-internal
   enabled: true
   hosts:
     - "pihole.home"

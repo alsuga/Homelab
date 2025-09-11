@@ -1,0 +1,17 @@
+resources:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: immich
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: immich-library-pvc
+      namespace: immich
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          strong: 6Ti
+      storageClassName: longhorn

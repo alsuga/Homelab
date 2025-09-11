@@ -1,16 +1,20 @@
 repositories:
   - name: longhorn
     url: https://charts.longhorn.io
-  - name: immich-app
-    url: https://immich-app.github.io/immich-charts/
   - name: metallb
     url: https://metallb.github.io/metallb
-  - name: mojo2600
-    url: https://mojo2600.github.io/pihole-kubernetes/
+  # - name: mojo2600
+  #   url: https://mojo2600.github.io/pihole-kubernetes/
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
+  # - name: bitnami
+  #   url: https://charts.bitnami.com/bitnami
+#  - name: immich-app
+#    url: https://immich-app.github.io/immich-charts/
+#  - name: bedag
+#    url: https://bedag.github.io/helm-charts/
+#  - name: cnpg
+#    url: https://cloudnative-pg.github.io/charts
 ---
 releases:
   # Distributed storage
@@ -19,67 +23,72 @@ releases:
     chart: longhorn/longhorn
     version: 1.9.0
 
+     
+  # # Load balancer
+  # - name: metallb
+  #   namespace: metallb-system
+  #   chart: metallb/metallb
+  #   version: 0.15.2
   #
-  - name: immich
-    namespace: immich
-    chart: immich-app/immich
-    version: 0.9.3
-    values:
-      - ingress:
-          enabled: true
-          hosts:
-            - host: immich.homelab
-              paths:
-                - path: /
-                  pathType: Prefix
-
-      - immich:
-          persistence:
-            enabled: true
-            storageClassName: "longhorn"
-            size: 200Gi
-
-      - postgresql:
-          enabled: true
-          persistence:
-            enabled: true
-            storageClassName: "longhorn"
-            size: 25Gi
-
-      - redis:
-          enabled: true
-          persistence:
-            enabled: true
-            storageClassName: "longhorn"
-            size: 10Gi
-
-  # Load balancer
-  - name: metallb
-    namespace: metallb-system
-    chart: metallb/metallb
-    version: 0.15.2
-
-  # Pihole
-  - name: pihole
-    namespace: pihole-system
-    chart: mojo2600/pihole
-    version: 2.31.0
-    values:
-      - ./values/pihole.values.yaml
-
-  # Ingress for local network
-  - name: ingress-nginx-internal
-    namespace: nginx-system
-    chart: ingress-nginx/ingress-nginx
-    version: 4.13.0
-    values:
-      - ./values/nginx-internal.values.yaml
+  # # Ingress for local network
+  # - name: ingress-nginx-internal
+  #   namespace: nginx-system
+  #   chart: ingress-nginx/ingress-nginx
+  #   version: 4.13.0
+  #   values:
+  #     - ./values/nginx-internal.values.yaml
   #
-  # # Automatic DNS for pihole
-  - name: externaldns-pihole
-    namespace: pihole-system
-    chart: bitnami/external-dns
-    version: 8.9.2
-    values:
-      - ./values/externaldns.values.yaml
+  # # Pihole
+  # - name: pihole
+  #   namespace: pihole-system
+  #   chart: mojo2600/pihole
+  #   version: 2.18.0
+  #   values:
+  #     - ./values/pihole.values.yaml
+  #
+  # #
+  # # # Automatic DNS for pihole
+  # - name: externaldns-pihole
+  #   namespace: pihole-system
+  #   chart: bitnami/external-dns
+  #   version: 8.0.1
+  #   values:
+  #     - ./values/externaldns.values.yaml
 
+#  - name: cnpg-operator
+#    namespace: cnpg-system
+#    chart: cnpg/cloudnative-pg
+#    version: 0.24.0
+#    createNamespace: true
+#
+#  - name: immich-pvc
+#    namespace: immich
+#    chart: bedag/raw
+#    values:
+#      - ./values/immich-pvc.values.yaml
+#
+#  - name: immich-postgres-secret
+#    namespace: immich
+#    chart: bedag/raw
+#    values:
+#      - ./values/immich-postgres-secret.yaml
+#
+#  - name: immich-postgres-cluster
+#    namespace: immich
+#    chart: bedag/raw
+#    needs:
+#      - cnpg-system/cnpg-operator
+#      - immich/immich-postgres-secret
+#    values:
+#      - ./values/immich-postgres-secret.yaml
+#
+#  - name: immich
+#    namespace: immich
+#    chart: immich-app/immich
+#    version: 0.9.3
+#    needs:
+#      - longhorn-system/longhorn
+#      - immich/immich-pvc
+#      - immich/immich-postgres-secret
+#    values:
+#      - ./values/immich.values.yaml
